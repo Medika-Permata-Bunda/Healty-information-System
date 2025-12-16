@@ -2,7 +2,8 @@
 import Navbar from "@/components/Navbar/primary";
 import Navside from "@/components/Navside/primary";
 import Table from "@/components/Table/primary";
-import { JSX } from "react";
+import { JSX, useState } from "react";
+import ModalRegister from "./Modal";
 
 interface Body {
   no: string
@@ -12,6 +13,12 @@ interface Body {
 }
 
 export default function Home() {
+
+  const [modal, setModal] = useState<boolean>(false)
+
+  function close() {
+    setModal(false)
+  }
 
   const head: string[] = ["No", "Rekam medis", "Alamat", "Action"]
   const body: Body[] = [
@@ -33,7 +40,7 @@ export default function Home() {
         {/* content */}
           <Table <Body> title="Data pasien" description="menampilkan semua data pasien" head={head} body={body}>
             <div className="flex items-center">
-              <button className="w-8 h-8 bg-blue-600 rounded-full mx-2 text-2xl text-center">+</button>
+              <button className="w-8 h-8 bg-blue-600 rounded-full mx-2 text-2xl text-center" onClick={() => setModal(true)}>+</button>
               <div className="search">
                 <input type="text" placeholder="search..." />
                 <button className="border border-(--line) px-2">Search</button>
@@ -43,6 +50,9 @@ export default function Home() {
         {/* content */}
         </section>
       </div>
+      {modal && (
+        <ModalRegister close={() => close()}/>
+      )}
     </div>
   );
 }
