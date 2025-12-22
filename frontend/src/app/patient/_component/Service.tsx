@@ -44,7 +44,7 @@ export default function Service(): JSX.Element {
         <div className="m-2 flex border border-(--line) rounded-xl">
           <div className="w-[30%] border-r border-(--line)"></div>
           <div className="grid grid-cols-3">
-            {input.map((item, index) => (<Input index={index} label={item.label} component={item.component} />))}
+            {input.map((item, index) => (<Input key={index} label={item.label} component={item.component} />))}
           </div>
         </div>
         <div className="flex items-center justify-end m-2">

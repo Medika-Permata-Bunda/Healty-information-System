@@ -102,7 +102,7 @@ export default function ModalRegister({close}: Child): JSX.Element {
             <button className="m-1 py-1 px-3 bg-red-500 rounded-md" onClick={close}>Close</button>
           </div>
         <div className="grid grid-cols-3 w-[80%]">
-          {input.map((item, index) => (<Input index={index} label={item.label} component={item.component} />))}
+          {input.map((item, index) => (<Input key={index} label={item.label} component={item.component} />))}
         </div>
       </div>
     </Modal>
