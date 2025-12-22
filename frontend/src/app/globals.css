@@ -19,6 +19,7 @@
     --secondary: #0f0f0f;
     --secondary-2: #0099ff21;
     --font: #ffffff65;
+    --transparent: #00befe53;
     --line:  rgb(58, 58, 58);
   }
 }
@@ -49,4 +50,8 @@ body {
 .search > button {
   border: 1px solid var(--line);
   border-radius: 0 4rem 4rem 0;
+}
+
+.glass {
+  border: 1px 1px solid red;
 }

@@ -2,9 +2,8 @@
 import Modal from "@/components/Modal/primary";
 import { Address, Birth, Patient } from "@/types/patient";
 import { JSX, useState } from "react";
-import { AddPatient } from "./action";
-
-const date = new Date()
+import { isFormEmpty } from "../action";
+import Input from "@/components/Input/Primary";
 
 interface Child {
     close: () => void
@@ -99,16 +98,11 @@ export default function ModalRegister({close}: Child): JSX.Element {
       <div className="w-[95%] h-[95vh] rounded-xl flex border border-(--line) bg-(--secondary) overflow-scroll">
           <div className="border-r border-(--line) w-[20%]">
             <h1 className="m-2">Input data pasien</h1>
-            <button className="m-1 py-1 px-3 bg-green-500 rounded-md" onClick={() => AddPatient(patient)}>Save</button>
+            <button className="m-1 py-1 px-3 bg-green-500 rounded-md" onClick={() => isFormEmpty(patient)}>Save</button>
             <button className="m-1 py-1 px-3 bg-red-500 rounded-md" onClick={close}>Close</button>
           </div>
         <div className="grid grid-cols-3 w-[80%]">
-          {input.map((item, index) =>
-            <div key={index} className="m-2 text-(--font)">
-              <label>{item.label}</label>
-              {item.component}
-            </div>
-          )}
+          {input.map((item, index) => (<Input index={index} label={item.label} component={item.component} />))}
         </div>
       </div>
     </Modal>
