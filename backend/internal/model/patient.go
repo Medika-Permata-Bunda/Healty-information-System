@@ -7,7 +7,7 @@ import (
 type Patient struct {
 	MedicalRecord string `db:"medical_record" json:"medical_record"`
 	Name          string `db:"name" json:"name"`
-	BirthPlace    string `db:"birth_pace" json:"birth_place"`
+	BirthPlace    string `db:"birth_place" json:"birth_place"`
 	BirthDate     string `db:"birth_date" json:"birth_date"`
 
 	Gender    string `db:"gender" json:"gender"`
@@ -31,7 +31,7 @@ type Patient struct {
 	Address  string `db:"address" json:"address"`
 	Village  int    `db:"village" json:"village"`
 	District int    `db:"district" json:"district"`
-	Regencie int    `db:"regencie" json:"regencie"`
+	Regency  int    `db:"regency" json:"regency"`
 	Province int    `db:"province" json:"province"`
 
 	MotherName string `db:"mother_name" json:"mother_name"`
@@ -41,6 +41,56 @@ type Patient struct {
 	ParentAddress  string    `db:"parent_address" json:"parent_address"`
 	ParentVillage  int       `db:"parent_village" json:"parent_village"`
 	ParentDistrict int       `db:"parent_district" json:"parent_district"`
-	ParentRegencie int       `db:"parent_regencie" json:"parent_regencie"`
+	ParentRegency  int       `db:"parent_regency" json:"parent_regency"`
 	ParentProvince int       `db:"parent_province" json:"parent_province"`
+}
+
+type PatientResult struct {
+	MedicalRecord string      `json:"medical_record"`
+	Name          string      `json:"name"`
+	Birth         BirthResult `json:"birth"`
+
+	Gender    string `json:"gender"`
+	Blood     string `json:"blood"`
+	Education string `json:"education"`
+	Religion  string `json:"religion"`
+	Wedding   string `json:"wedding"`
+
+	Nation     Category `json:"nation"`
+	Language   Category `json:"language"`
+	Disability Category `json:"disability"`
+
+	NIK   string `json:"nik"`
+	BPJS  string `json:"bpjs"`
+	Email string `json:"email"`
+	Phone string `json:"phone"`
+
+	Work     Category `json:"work"`
+	Instance Category `json:"instance"`
+
+	Address AddressResult `json:"address"`
+
+	MotherName string `json:"mother_name"`
+	ParentName string `json:"parent_name"`
+
+	ParentWork    Category      `json:"parent_work"`
+	ParentAddress AddressResult `json:"parent_address"`
+}
+
+type BirthResult struct {
+	Place string `json:"place"`
+	Date  string `json:"date"`
+}
+
+type AddressResult struct {
+	Address  string `json:"address"`
+	Village  int    `json:"village"`
+	District int    `json:"district"`
+	Regency  int    `json:"regency"`
+	Province int    `json:"province"`
+}
+
+type Category struct {
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
 }
