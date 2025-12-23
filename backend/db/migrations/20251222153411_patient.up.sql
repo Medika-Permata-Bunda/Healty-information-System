@@ -46,7 +46,7 @@ END$$;
 CREATE TABLE IF NOT EXISTS patient (
 	medical_record VARCHAR(10) PRIMARY KEY,
 	name VARCHAR(80) NOT NULL,
-	birth_pace VARCHAR(80) NOT NULL,
+	birth_place VARCHAR(80) NOT NULL,
 	birth_date DATE NOT NULL,
 	gender gender_type DEFAULT 'L',
 	blood blood_type DEFAULT 'A',
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS patient (
 	address TEXT NOT NULL,
 	village INT NOT NULL,
 	district INT NOT NULL,
-	regencie INT NOT NULL,
+	regency INT NOT NULL,
 	province INT NOT NULL,
 	mother_name VARCHAR(80) NOT NULL,
 	parent_name VARCHAR(80) NOT NULL,
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS patient (
 	parent_address TEXT NOT NULL,
 	parent_village INT NOT NULL,
 	parent_district INT NOT NULL,
-	parent_regencie INT NOT NULL,
+	parent_regency INT NOT NULL,
 	parent_province INT NOT NULL,
 	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 	updated_at TIMESTAMP NOT NULL DEFAULT NOW()

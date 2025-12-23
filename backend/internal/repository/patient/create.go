@@ -1,24 +1,7 @@
-package repository
+package patient
 
-import (
-	"database/sql"
-	"his/internal/model"
-)
+import "his/internal/model"
 
-type patientRepository struct {
-	db *sql.DB
-}
-
-type PatientRepository interface {
-	AddPatient(data model.Patient) error
-	// Add function in here
-}
-
-func NewPatientRepository(db *sql.DB) PatientRepository {
-	return &patientRepository{db}
-}
-
-// Write code in here
 func (q *patientRepository) AddPatient(data model.Patient) error {
 
 	query := `
@@ -51,7 +34,7 @@ func (q *patientRepository) AddPatient(data model.Patient) error {
 		data.Address,
 		data.Village,
 		data.District,
-		data.Regencie,
+		data.Regency,
 		data.Province,
 		data.MotherName,
 		data.ParentName,
@@ -59,7 +42,7 @@ func (q *patientRepository) AddPatient(data model.Patient) error {
 		data.ParentAddress,
 		data.ParentVillage,
 		data.ParentDistrict,
-		data.ParentRegencie,
+		data.ParentRegency,
 		data.ParentProvince,
 	); err != nil {
 		return err
