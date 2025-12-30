@@ -14,13 +14,8 @@ interface Body {
 export default function Register(): JSX.Element {
   
     const [patient, setPatient] = useState<Body>({no: "1", medical_record: "00000", name: "dummy", address: "address", action: <div><button onClick={() => alert("oke")}>Edit</button><button onClick={() => alert("oke")}>Delete</button></div>})
-    const [modal, setModal] = useState<boolean>(false)
     
-    function close() {
-      setModal(false)
-    }
-    
-    const head: string[] = ["No", "Nama", "Rekam medis", "Alamat", "Action"]
+    const head: string[] = ["No", "Rekam medis", "Nama", "Alamat", "Action"]
     const body: Body[] = [
       {no: "1", medical_record: "000001", name: "Agus", address: "jk. l", action: <div><button onClick={() => setPatient(body[0])}>Edit</button></div>},
       {no: "2", medical_record: "000002", name: "Andre", address: "jk. l", action: <div><button onClick={() => setPatient(body[1])}>Edit</button></div>},
@@ -33,13 +28,6 @@ export default function Register(): JSX.Element {
 
     return (
       <>
-        <div className="flex items-center justify-end m-2">
-          <button className="w-8 h-8 bg-blue-600 rounded-full mx-2 text-2xl text-center" onClick={() => setModal(true)}>+</button>
-          <div className="search">
-            <input type="text" placeholder="search..." />
-            <button className="border border-(--line) px-2">Search</button>
-          </div>
-        </div>
         <h1 className="m-2 mb-0">Registrasi pasien</h1>
         <div className="flex w-full">
           <Table <Body> head={head} body={body}/>
@@ -52,9 +40,6 @@ export default function Register(): JSX.Element {
               </div>
             </div>
           </div>
-          {modal && (
-            <ModalRegister close={() => close()}/>
-          )}
         </div>
       </>
     )
