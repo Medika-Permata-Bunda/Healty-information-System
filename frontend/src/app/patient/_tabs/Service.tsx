@@ -41,16 +41,11 @@ export default function Service(): JSX.Element {
 
     return (
       <>
+        <h1 className="m-2 mb-0">Daftar pelayanan</h1>
         <div className="m-2 flex border border-(--line) rounded-xl">
           <div className="w-[30%] border-r border-(--line)"></div>
           <div className="grid grid-cols-3">
             {input.map((item, index) => (<Input key={index} label={item.label} component={item.component} />))}
-          </div>
-        </div>
-        <div className="flex items-center justify-end m-2">
-          <div className="search">
-            <input type="text" placeholder="search..." />
-            <button className="border border-(--line) px-2">Search</button>
           </div>
         </div>
         <div className="flex w-full">
