@@ -56,3 +56,7 @@ body {
 .glass {
   border: 1px 1px solid red;
 }
+
+option {
+  background-color: var(--background);
+}

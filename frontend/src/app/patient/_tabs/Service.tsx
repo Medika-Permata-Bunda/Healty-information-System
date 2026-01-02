@@ -35,7 +35,7 @@ export default function Service(): JSX.Element {
       {label: "Nomor Registrasi", component: <input type="number" className="border border-(--line) px-2 py-1 rounded-md w-full"/>},
       {label: "Nomor Rawat", component: <input type="number" className="border border-(--line) px-2 py-1 rounded-md w-full"/>},
       {label: "Nomor Rekam Medis", component: <input type="number" className="border border-(--line) px-2 py-1 rounded-md w-full"/>},
-      {label: "Poli tujuan", component: <select className="border border-(--line) px-2 py-1 rounded-md w-full"><option value="menikah">Menikah</option><option value="cerai">Cerai</option><option value="dudha">Dudha</option><option value="janda">Janda</option></select>},
+      {label: "Poli tujuan", component: <select className="border border-(--line) px-2 py-1 rounded-md w-full"><option value="menikah">Bedah</option><option value="cerai">Jiwa</option><option value="dudha">Penyakit dalam</option><option value="janda">THT</option></select>},
       {label: "Dokter tujuan", component: <input type="text" className="border border-(--line) px-2 py-1 rounded-md w-full"/>},
     ] 
 

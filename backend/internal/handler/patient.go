@@ -2,104 +2,107 @@ package handler
 
 import (
 	"database/sql"
-	"encoding/json"
 	"his/internal/model"
-	patientService "his/internal/service/patient"
-	logging "his/pkg/logging"
+	"his/internal/repository"
+	"his/internal/service"
 	"his/pkg/middleware"
 	"his/pkg/page"
+	"his/pkg/response"
 	"his/pkg/util"
 	"net/http"
 )
 
-func PatientController(db *sql.DB) http.HandlerFunc {
+// this handler is for URLs that do not have a prefix parameter
+// example without prefix -> api/patient
+func PatientHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		repo := repository.NewPatientRepository(db)
+		serv := service.NewPatientService(db, repo)
 
 		switch r.Method {
-		case "GET":
-			showPatient(db)(w, r)
-		case "POST":
-			addPatient(db)(w, r)
-		default:
-			res, _ := json.Marshal(model.ResponseMessage{Status: "failed", Message: "method not allowed"})
-			logging.Log("Warning : method not allowed", "WARN", r)
-			w.WriteHeader(405)
-			w.Write(res)
-		}
-
-	}
-}
-
-func showPatient(db *sql.DB) http.HandlerFunc {
-	return middleware.CORS(
-		middleware.RateLimiter(1, 1, func(w http.ResponseWriter, r *http.Request) {
+		case http.MethodGet:
+			// handler(func(w http.ResponseWriter, r *http.Request) {
 			param := r.URL.Query()
 			keyword := param.Get("keyword")
 
 			size := page.ParamPagination("size", 15, r)
-			pg, offsite := page.ParamOffset(size, r)
+			p, offsite := page.ParamOffset(size, r)
 
-			data, mess, count, err := patientService.NewPatientService(db).PaginationPatientService(offsite, size, keyword)
+			data, count, mess, err := serv.ShowPatientService(offsite, size, keyword)
 			if err != nil {
-				res, _ := json.Marshal(model.ResponseMessage{Status: "failed", Message: mess})
-				logging.Log("Error :"+err.Error(), "ERROR", r)
-				w.WriteHeader(400)
-				w.Write(res)
-
+				response.ResponseMessage(mess, err.Error(), "WARN", 400, w, r)
 				return
 			}
 
 			// Create pagination link
-			// PaginationLink(page, size, count int, keyword string)
-			previousLink, nextLink := page.PaginationLink(pg, size, count, keyword)
+			previousLink, nextLink := page.PaginationLink(p, size, count, keyword)
 
 			rec := model.PaginationResponse{
 				Result: data,
 				Meta: model.PaginationMeta{
 					TotalData: count,
-					Page:      pg,
+					Page:      p,
 					Size:      size,
 					Previous:  previousLink,
 					Next:      nextLink,
 				},
 			}
 
-			res, _ := json.Marshal(rec)
-			logging.Log(mess, "INFO", r)
-			w.WriteHeader(200)
-			w.Write(res)
-		}),
-	)
+			response.ResponseBody(rec, "success", "INFO", 200, w, r)
+			// })
+		case http.MethodPost:
+			// handler(func(w http.ResponseWriter, r *http.Request) {
+			body, err := util.BodyDecoder[model.PatientRequest](r)
+			if err != nil {
+				response.ResponseMessage("failed decode body", err.Error(), "ERROR", 500, w, r)
+				return
+			}
+
+			mess, err := serv.CreatePatientService(body)
+			if err != nil {
+				response.ResponseMessage(mess, err.Error(), "WARN", 400, w, r)
+				return
+			}
+
+			response.ResponseMessage("success", "success", "INFO", 200, w, r)
+			// })
+		default:
+			response.ResponseMessage("method not allowed", "method not allowed", "INFO", 405, w, r)
+		}
+
+	}
 }
 
-func addPatient(db *sql.DB) http.HandlerFunc {
+// example with prefix -> api/patient/{id}
+func PatientHandlerPrefix(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		switch r.Method {
+		case http.MethodGet:
+			handler(func(w http.ResponseWriter, r *http.Request) {
+				// Write code in here
+			})
+		case http.MethodPut:
+			handler(func(w http.ResponseWriter, r *http.Request) {
+				// Write code in here
+			})
+		case http.MethodDelete:
+			handler(func(w http.ResponseWriter, r *http.Request) {
+				// Write code in here
+			})
+		default:
+			response.ResponseMessage("method not allowed", "method not allowed", "INFO", 405, w, r)
+		}
+
+	}
+}
+
+// Custom your handler
+func handler(next http.HandlerFunc) http.HandlerFunc {
 	return middleware.CORS(
 		middleware.RateLimiter(1, 1, func(w http.ResponseWriter, r *http.Request) {
-			// Write code in here
-			body, err := util.BodyDecoder[model.Patient](r)
-			if err != nil {
-				res, _ := json.Marshal(model.ResponseMessage{Status: "failed", Message: "error decode json"})
-				logging.Log("Error :"+err.Error(), "ERROR", r)
-				w.WriteHeader(500)
-				w.Write(res)
-
-				return
-			}
-
-			mess, err := patientService.NewPatientService(db).AddPatientService(body)
-			if err != nil {
-				res, _ := json.Marshal(model.ResponseMessage{Status: "failed", Message: mess})
-				logging.Log("Error :"+err.Error(), "ERROR", r)
-				w.WriteHeader(500)
-				w.Write(res)
-
-				return
-			}
-
-			res, _ := json.Marshal(model.ResponseMessage{Status: "success", Message: "success"})
-			logging.Log("message", "INFO", r)
-			w.WriteHeader(200)
-			w.Write(res)
+			// add more middleware in here
+			next(w, r)
 		}),
 	)
 }

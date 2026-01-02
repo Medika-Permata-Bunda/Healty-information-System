@@ -2,9 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"his/internal/config"
+	"his/config"
 	"his/internal/handler"
 	"net/http"
+	"os"
 )
 
 func Server(listen string) {
@@ -15,9 +16,9 @@ func Server(listen string) {
 	defer db.Close()
 
 	// Route
-	http.HandleFunc("/patient", handler.PatientController(db))
+	http.HandleFunc("/patient", handler.PatientHandler(db))
 
 	fmt.Println("[  Database connected ]")
-	fmt.Println("[  Server listen in ", listen, " ]")
+	fmt.Println("[  Server listen in port ", os.Getenv("APP_LISTEN"), " ]")
 	http.ListenAndServe(listen, nil)
 }
