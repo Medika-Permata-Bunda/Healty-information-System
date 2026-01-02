@@ -5,6 +5,11 @@ type ResponseMessage struct {
 	Message string `json:"message"`
 }
 
+type ResponseBody struct {
+	Status   string `json:"status"`
+	Response any    `json:"message"`
+}
+
 type PaginationResponse struct {
 	Result any            `json:"result"`
 	Meta   PaginationMeta `json:"meta"`

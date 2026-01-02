@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"his/internal/config"
+	"his/config"
 	"log"
 	"os"
 	"path/filepath"

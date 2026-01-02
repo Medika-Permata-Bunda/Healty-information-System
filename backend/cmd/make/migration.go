@@ -61,7 +61,7 @@ DROP TABLE IF EXISTS %s;
 
 -- Atau jika ada foreign key constraints:
 -- DROP TABLE IF EXISTS %s CASCADE;
-	`, name, name, name)), 0o644)
+`, name, name, name)), 0o644)
 
 	fmt.Println("Created:", upPath)
 	fmt.Println("Created:", downPath)

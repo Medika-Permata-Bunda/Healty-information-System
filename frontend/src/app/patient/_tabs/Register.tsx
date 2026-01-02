@@ -1,7 +1,7 @@
 'use client'
+import Input from "@/components/Input/Primary"
 import Table from "@/components/Table/primary"
 import { JSX, useState } from "react"
-import ModalRegister from "../_modal/Register"
 
 interface Body {
   no: string
@@ -13,6 +13,11 @@ interface Body {
 
 export default function Register(): JSX.Element {
   
+    interface Input {
+      label: string
+      component: JSX.Element
+    }
+
     const [patient, setPatient] = useState<Body>({no: "1", medical_record: "00000", name: "dummy", address: "address", action: <div><button onClick={() => alert("oke")}>Edit</button><button onClick={() => alert("oke")}>Delete</button></div>})
     
     const head: string[] = ["No", "Rekam medis", "Nama", "Alamat", "Action"]
@@ -24,6 +29,10 @@ export default function Register(): JSX.Element {
       {no: "5", medical_record: "000005", name: "Jaka", address: "jk. l", action: <div><button onClick={() => setPatient(body[4])}>Edit</button></div>},
       {no: "6", medical_record: "000006", name: "Samsul", address: "jk. l", action: <div><button onClick={() => setPatient(body[5])}>Edit</button></div>},
       {no: "7", medical_record: "000007", name: "Aceng", address: "jk. l", action: <div><button onClick={() => setPatient(body[6])}>Edit</button></div>},
+    ]
+
+    const inp: Input[] = [
+      {label: "Username", component: <><input className="border border-(--line) p-1 ml-2 m-1 rounded-md" type="text" value={patient.name} /><button className="rounded-md m-1 p-1 px-2 border border-(--line)">m</button></>}
     ]
 
     return (
@@ -39,6 +48,11 @@ export default function Register(): JSX.Element {
                 <p className="ml-2 text-xs text-(--font)">{patient.medical_record}</p>
               </div>
             </div>
+            {inp.map((item, index) => (
+              <div key={index}>
+                {item.component}
+              </div>
+            ))}
           </div>
         </div>
       </>
