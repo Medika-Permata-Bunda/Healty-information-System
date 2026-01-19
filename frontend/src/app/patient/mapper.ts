@@ -1,10 +1,12 @@
 import { Patient } from "@/types/patient"
+import { ReactNode } from "react"
 
 interface Body {
   no: number
   name: string
   medical_record: string
   address: string
+  action?: ReactNode;
 }
 
 export function tableMapper(res:Patient[]): Body[] {

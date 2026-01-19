@@ -1,6 +1,6 @@
 import {Patient} from "@/types/patient";
-import { ResponseData } from "@/types/response";
-import { NextResponse } from "next/server";
+import { ResponseData, ResponseMessage } from "@/types/response";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
     const response:ResponseData<Patient[]> = {
@@ -54,6 +54,26 @@ export async function GET() {
             previous: null,
             next: null
         }
+    }
+
+    return NextResponse.json(response)
+}
+
+export async function DELETE(req: NextRequest) {
+    const response: ResponseMessage = {
+        status: "succcess",
+        message: "deleted success" + req.nextUrl.searchParams.get("id")
+    }
+
+    return NextResponse.json(response)
+}
+
+export async function PATCH(req: NextRequest) {
+    const body = await req.json();
+
+    const response: ResponseMessage = {
+        status: "succcess",
+        message: "update success " + body + " " + req.nextUrl.searchParams.get("id")
     }
 
     return NextResponse.json(response)

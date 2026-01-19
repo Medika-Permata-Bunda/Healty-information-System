@@ -1,3 +1,8 @@
+export interface ResponseMessage {
+    status: string
+    message: string
+}
+
 export interface ResponseData<T> {
     result: T,
     meta: Meta
