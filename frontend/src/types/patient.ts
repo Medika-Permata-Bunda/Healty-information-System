@@ -39,3 +39,22 @@ export interface Patient {
     work: string
     instance: string
 }
+
+export interface Meta {
+    total_data: number
+    page: number
+    size: number
+    previous: string
+    next: string
+}
+
+export interface PatientResponse {
+    result: Patient[]
+    meta: Meta
+}
+
+export interface PatientMap {
+    medical_record: string
+    name: string
+    birth: string
+}
