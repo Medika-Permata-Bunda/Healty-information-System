@@ -1,4 +1,5 @@
 import { Patient } from "@/types/patient";
+import { ResponseData } from "@/types/response";
 
 export function isFormEmpty(data: Patient) {
     const d = Object.keys(data)
@@ -17,4 +18,11 @@ export function isFormEmpty(data: Patient) {
     }
 
     alert("saving")
+}
+
+export async function Get() {
+    const response = await fetch("http://localhost:3000/api/patient")
+    const data = await response.json()
+
+    return data as ResponseData<Patient[]>
 }

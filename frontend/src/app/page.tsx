@@ -1,6 +1,7 @@
 'use client'
 import Navbar from "@/components/Navbar/primary";
 import Navside from "@/components/Navside/primary";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import { JSX } from "react";
 
 interface Body {
