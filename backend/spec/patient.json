@@ -1,0 +1,40 @@
+{
+    "medical_record": "string",
+    "name": "string",
+    "birth": {
+        "date": "string",
+        "place": "string"
+    },
+    "blood_type": "string",
+    "gender": "string",
+    "education": "string",
+    "religion": "string",
+    "wedding": "string",
+    "nik": "string",
+    "bpjs": "string",
+    "email": "string",
+    "phone_number": "string",
+    "parent": {
+        "name": "string",
+        "relation": "string"
+    },
+    "address": {
+        "full_address": "string",
+        "village": {
+            "id": "int",
+            "name": "string"
+        },
+        "district": {
+            "id": "int",
+            "name": "string"
+        },
+        "regencie": {
+            "id": "int",
+            "name": "string"
+        },
+        "province": {
+            "id": "int",
+            "name": "string"
+        }
+    }
+}

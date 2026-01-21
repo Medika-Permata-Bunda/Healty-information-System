@@ -1,5 +1,6 @@
-import { Patient } from "@/types/patient";
-import { ResponseData, ResponseMessage } from "@/types/response";
+import { PatientRequest } from "@/types/patient/request";
+import { Patient } from "@/types/patient/response";
+import { ResponseData, ResponseDataPagination, ResponseMessage } from "@/types/response";
 
 export function isFormEmpty(data: Patient) {
     const d = Object.keys(data)
@@ -20,30 +21,37 @@ export function isFormEmpty(data: Patient) {
     alert("saving")
 }
 
-export async function Get() {
-    const response = await fetch("http://localhost:3000/api/patient")
+export async function Get(param: string | null) {
+    const response = await fetch(`http://localhost:3000/api/patient?${param}`)
     const data = await response.json()
 
-    return data as ResponseData<Patient[]>
+    return data as ResponseDataPagination<Patient[]>
 }
 
-export async function Delete(id: string | undefined) {
+export async function Delete(id: string | undefined): Promise<boolean> {
     const response = await fetch(`http://localhost:3000/api/patient?id=${id}`, {
         method: "DELETE"
     })
     const data: ResponseMessage = await response.json()
-
+    
     alert(data.message)
+    if(response.status != 200){
+        return false
+    }
+
+    return true
 }
 
-export async function Patch<T>(val: T) {
-    const response = await fetch(`http://localhost:3000/api/patient?id=${val}`, {
-        method: "PATCH",
-        body: JSON.stringify({
-            name: val
-        })
+export async function Post(patient: PatientRequest): Promise<ResponseData<Patient> | null> {
+    const response = await fetch(`http://localhost:3000/api/patient`, {
+        method: "POST",
+        body: JSON.stringify(patient)
     })
-    const data: ResponseMessage = await response.json()
+    
+    if(!response.ok){
+        return null
+    }
 
-    alert(data.message)
+    const json: ResponseData<Patient> = await response.json()
+    return json
 }

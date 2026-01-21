@@ -39,7 +39,7 @@ export default function Home(): JSX.Element {
           </section>
           { openTab == "service" ? <Service/> : <Register/> }
            {modal && (
-              <ModalRegister close={() => close()}/>
+              <ModalRegister onClose={() => close()}/>
             )}
         </section>
       </div>

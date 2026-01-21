@@ -3,7 +3,7 @@ export interface ResponseMessage {
     message: string
 }
 
-export interface ResponseData<T> {
+export interface ResponseDataPagination<T> {
     result: T,
     meta: Meta
 }
@@ -14,4 +14,9 @@ interface Meta {
     size: number,
     previous: string | null,
     next: string | null
+}
+
+export interface ResponseData<T> {
+    result: T,
+    status: string
 }

@@ -1,9 +1,9 @@
 'use client'
 import Modal from "@/components/Modal/primary";
 import { useClickOutside } from "@/hooks/useClickOutside";
-import { Patient } from "@/types/patient";
-import { ChangeEvent, JSX, useRef, useState } from "react";
-import { Delete, Patch } from "../action";
+import { Patient } from "@/types/patient/response";
+import { JSX, useRef, useState } from "react";
+import { Delete } from "../action";
 
 function Input({data}: {data: {data: string | undefined, label: string}}): JSX.Element {
 
@@ -11,7 +11,6 @@ function Input({data}: {data: {data: string | undefined, label: string}}): JSX.E
     const [value, setValue] = useState<string>(data.data ?? "")
 
     async function update() {
-        await Patch<string>(value)
         setEdit(false)
     }
 
@@ -28,13 +27,20 @@ function Input({data}: {data: {data: string | undefined, label: string}}): JSX.E
     )
 }
 
-export default function SideMenu({props}: {props: {open: () => void, req: Partial<Patient> | undefined}}): JSX.Element {
+export default function SideMenu({onModal, onDelete, req}: {onModal: () => void, onDelete: () => void, req: Partial<Patient> | undefined}): JSX.Element {
     const ref = useRef<HTMLDivElement>(null);
-    useClickOutside(ref, () => props.open());
+    useClickOutside(ref, () => onModal());
 
     async function del(id: string | undefined) {
-        await Delete(id)
-        props.open()
+        if(confirm("anda yakin untuk mengapus data ini?")){
+            if(await Delete(id)){
+                onDelete()
+            }else{
+                return
+            }
+        }else{
+            return
+        }
     }
 
     return (
@@ -44,15 +50,15 @@ export default function SideMenu({props}: {props: {open: () => void, req: Partia
                     <div className="flex items-center">
                         <div className="w-10 h-10 rounded-full bg-red-500"></div>
                         <div className="ml-2">
-                            <p className="font-bold">{props.req?.name}</p>
-                            <p className="text-xs text-(--font)">{props.req?.medical_record}</p>
+                            <p className="font-bold">{req?.name}</p>
+                            <p className="text-xs text-(--font)">{req?.medical_record}</p>
                         </div>
                     </div>
-                    <i className="bi bi-trash-fill m-2 text-red-500 bg-(--redbg) py-2 px-3 rounded-md border border-(--redline) cursor-pointer" onClick={() => del(props.req?.medical_record)}></i>
+                    <i className="bi bi-trash-fill m-2 text-red-500 bg-(--redbg) py-2 px-3 rounded-md border border-(--redline) cursor-pointer" onClick={() => del(req?.medical_record)}></i>
                 </div>
                 <div className="mt-2 h-full overflow-scroll">
-                    <Input data={{data: props.req?.nik, label: "NIK"}} />
-                    <Input data={{data: props.req?.bpjs, label: "BPJS"}} />
+                    <Input data={{data: req?.nik, label: "NIK"}} />
+                    <Input data={{data: req?.bpjs, label: "BPJS"}} />
                 </div>
             </section>
         </Modal>
