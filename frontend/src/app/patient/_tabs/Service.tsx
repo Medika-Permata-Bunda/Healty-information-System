@@ -1,7 +1,7 @@
 'use client'
 import Input from "@/components/Input/Primary"
 import Table from "@/components/Table/primary"
-import { PatientMap } from "@/types/patient"
+import { PatientMap } from "@/types/patient/response"
 import { JSX } from "react"
 
 interface Input {

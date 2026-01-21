@@ -22,6 +22,11 @@
     --font: #ffffff65;
     --transparent: #00befe53;
     --line:  rgb(58, 58, 58);
+    --greenline:  rgba(0, 253, 21, 0.863);
+    --redline:  rgb(253, 0, 0);
+    --redbg:  rgba(255, 0, 0, 0.096);
+    --greenbg:  rgba(0, 255, 21, 0.096);
+    --gls: #ffffff00;
   }
 }
 
