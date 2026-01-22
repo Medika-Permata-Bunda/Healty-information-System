@@ -4,6 +4,7 @@ import { useClickOutside } from "@/hooks/useClickOutside";
 import { Patient } from "@/types/patient/response";
 import { JSX, useRef, useState } from "react";
 import { Delete } from "../action";
+import Confirm from "@/components/Confirm/primary";
 
 function Input({data}: {data: {data: string | undefined, label: string}}): JSX.Element {
 
@@ -31,21 +32,19 @@ export default function SideMenu({onModal, onDelete, req}: {onModal: () => void,
     const ref = useRef<HTMLDivElement>(null);
     useClickOutside(ref, () => onModal());
 
-    async function del(id: string | undefined) {
-        if(confirm("anda yakin untuk mengapus data ini?")){
-            if(await Delete(id)){
-                onDelete()
-            }else{
-                return
-            }
+    const [open, setOpen] = useState<boolean>(false)
+
+    async function onAgree() {
+        if(await Delete(req?.medical_record)){
+            onDelete()
         }else{
             return
-        }
+        } 
     }
 
     return (
         <Modal>
-            <section ref={ref} className="w-[25%] h-[96%] absolute right-3 bg-background rounded-2xl border border-(--line) overflow-hidden">
+            <section ref={ref} className="w-[25%] h-[96%] absolute right-3 bg-background rounded-2xl border border-(--line) overflow-hidden slide-right">
                 <div className="m-2 flex justify-between items-center border-b border-(--line) pb-2">
                     <div className="flex items-center">
                         <div className="w-10 h-10 rounded-full bg-red-500"></div>
@@ -54,8 +53,13 @@ export default function SideMenu({onModal, onDelete, req}: {onModal: () => void,
                             <p className="text-xs text-(--font)">{req?.medical_record}</p>
                         </div>
                     </div>
-                    <i className="bi bi-trash-fill m-2 text-red-500 bg-(--redbg) py-2 px-3 rounded-md border border-(--redline) cursor-pointer" onClick={() => del(req?.medical_record)}></i>
+                    <i className="bi bi-trash-fill m-2 text-red-500 bg-(--redbg) py-2 px-3 rounded-md border border-(--redline) cursor-pointer" onClick={() => setOpen(true)}></i>
                 </div>
+                {open && (<Confirm 
+                    label="Anda yakin akan menghapus data ini?"
+                    onAgree={() => onAgree()}
+                    onCancel={() => setOpen(false)}
+                />)}
                 <div className="mt-2 h-full overflow-scroll">
                     <Input data={{data: req?.nik, label: "NIK"}} />
                     <Input data={{data: req?.bpjs, label: "BPJS"}} />

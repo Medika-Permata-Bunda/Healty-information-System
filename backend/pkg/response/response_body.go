@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func ResponseBody(response any, log string, ty string, w http.ResponseWriter, r *http.Request) {
+func ResponseBody(response any, log string, ty string, code int, w http.ResponseWriter, r *http.Request) {
 	var s string
 
 	switch ty {
@@ -21,6 +21,6 @@ func ResponseBody(response any, log string, ty string, w http.ResponseWriter, r 
 
 	res, _ := json.Marshal(model.ResponseBody{Status: s, Result: response})
 	logging.Log(log, ty, r)
-	w.WriteHeader(200)
+	w.WriteHeader(code)
 	w.Write(res)
 }

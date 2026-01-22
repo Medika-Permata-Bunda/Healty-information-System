@@ -1,23 +1,21 @@
 package patientHandle
 
 import (
+	"context"
 	"his/internal/mapper"
 	"his/internal/model"
 	patientModel "his/internal/model/patient"
-	patientRepo "his/internal/repository/patient"
 	patientService "his/internal/service/patient"
 	pages "his/pkg/page"
 	"his/pkg/response"
 	"his/pkg/util"
 	"net/http"
+	"time"
 
 	"gorm.io/gorm"
 )
 
-func Handle(db *gorm.DB) http.HandlerFunc {
-	repo := patientRepo.InitPatientRepostory(db)
-	serv := patientService.InitPatientService(repo)
-
+func Handle(db *gorm.DB, serv patientService.PatientService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
@@ -31,18 +29,21 @@ func Handle(db *gorm.DB) http.HandlerFunc {
 func create(w http.ResponseWriter, r *http.Request, serv patientService.PatientService) {
 	requestBody, err := util.BodyDecoder[patientModel.Patient](r)
 	if err != nil {
-		response.ResponseMessage("failed decode body", err.Error(), "ERROR", 400, w, r)
+		response.ResponseMessage("failed decode body", err.Error(), "ERROR", http.StatusBadRequest, w, r)
 		return
 	}
 
-	result, message, err := serv.CreatePatientService(&requestBody)
+	ctx, cancel := context.WithTimeout(r.Context(), time.Second*5)
+	defer cancel()
+
+	result, message, err := serv.CreatePatientService(ctx, &requestBody)
 	if err != nil {
-		response.ResponseMessage(message, err.Error(), "ERROR", 400, w, r)
+		response.ResponseMessage(message, err.Error(), "ERROR", http.StatusBadRequest, w, r)
 		return
 	}
 
 	m := mapper.MappingPatientSingleData(result)
-	response.ResponseBody(m, message, "INFO", w, r)
+	response.ResponseBody(m, message, "INFO", http.StatusCreated, w, r)
 }
 
 func getAll(w http.ResponseWriter, r *http.Request, serv patientService.PatientService) {
@@ -52,7 +53,10 @@ func getAll(w http.ResponseWriter, r *http.Request, serv patientService.PatientS
 	size := pages.ParamPagination("size", 15, r)
 	page, offsite := pages.ParamOffset(size, r)
 
-	result, total, message, err := serv.GetAllPatientService(offsite, size, keyword)
+	ctx, cancel := context.WithTimeout(r.Context(), time.Second*5)
+	defer cancel()
+
+	result, total, message, err := serv.GetAllPatientService(ctx, offsite, size, keyword)
 	if err != nil {
 		response.ResponseMessage(message, err.Error(), "ERROR", 400, w, r)
 		return

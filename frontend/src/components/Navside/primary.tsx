@@ -1,19 +1,13 @@
 'use client'
 import Link from "next/link";
-import { JSX, useState } from "react";
-
-interface Path {
-    route: string
-    label: string
-    icon: string
-}
+import { JSX, useEffect, useState } from "react";
 
 export default function Navside(): JSX.Element {
 
     const [open, setOpen] = useState<boolean>(false)
-    const Route :Path[] = [
-        {route: "/", label:"Home", icon:"bi bi-house-fill"},
-        {route: "/patient", label:"Pasien", icon:"bi bi-people-fill"}
+    const Route :{route: string, label: string, icon: string, on_hover: boolean}[] = [
+        {route: "/", label:"Home", icon:"bi bi-house-fill", on_hover: false},
+        {route: "/patient", label:"Pasien", icon:"bi bi-people-fill", on_hover: false}
     ]
 
     return (

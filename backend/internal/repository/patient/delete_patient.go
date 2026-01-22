@@ -1,9 +1,12 @@
 package patientRepo
 
-import patientModel "his/internal/model/patient"
+import (
+	"context"
+	patientModel "his/internal/model/patient"
+)
 
-func (q patientRepository) DeletePatient(mr string) error {
-	if err := q.db.Delete(&patientModel.Patient{}, "medical_record = ?", mr).Error; err != nil {
+func (q *patientRepository) DeletePatient(ctx context.Context, mr string) error {
+	if err := q.db.WithContext(ctx).Model(&patientModel.Patient{}).Where("medical_record = ?", mr).Update("is_deleted", true).Error; err != nil {
 		return err
 	}
 

@@ -9,6 +9,9 @@ import SideMenu from "../_modal/SideMenu"
 interface Body {
   no: number
   name: string
+  nik: string
+  bpjs: string
+  phone_number: string
   medical_record: string
   address: string
   action?: ReactNode;
@@ -68,7 +71,7 @@ export default function Register(): JSX.Element {
       <>
         <div className="flex w-full p-1">
           <div className="w-full">
-            <Table <Body> head={["No", "Rekam medis", "Nama", "Alamat", "Action"]} body={table}/>
+            <Table <Body> head={["No", "Rekam medis", "Nama", "NIK", "BPJS", "Nomor Telpon", "Alamat", "Action"]} body={table}/>
             <div className="w-full p-2 pr-0 flex justify-between">
               <p>Total data : {meta.total_data}</p>
               <div className="flex justify-end gap-2">

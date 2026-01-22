@@ -2,9 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"his/config"
+	"his/internal/config"
 	"his/internal/database"
 	patientHandle "his/internal/handler/patient"
+	patientRepo "his/internal/repository/patient"
+	patientService "his/internal/service/patient"
 	"net/http"
 
 	"time"
@@ -20,13 +22,14 @@ func Server(listen string) {
 		panic(err)
 	}
 
-	// Route
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("listen"))
-	})
+	// Init
+	patientRepository := patientRepo.InitPatientRepostory(db)
+	patientService := patientService.InitPatientService(patientRepository)
+	// Init
 
-	http.HandleFunc("/patient", patientHandle.Handle(db))
-	http.HandleFunc("/patient/", patientHandle.HandlePrefix(db))
+	// Route
+	http.HandleFunc("/patient", patientHandle.Handle(db, patientService))
+	http.HandleFunc("/patient/", patientHandle.HandlePrefix(db, patientService))
 	// Route
 
 	fmt.Println("✅  Server start in : ", time.Now().Format("2006-01-02 15:04:05"))
