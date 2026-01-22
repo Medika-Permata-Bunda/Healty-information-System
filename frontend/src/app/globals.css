@@ -65,3 +65,30 @@ body {
 option {
   background-color: var(--background);
 }
+
+.slide-right {
+  animation: slide-right 0.2s ease-in-out;
+}
+
+.slide-down {
+  animation: slide-down 0.2s ease-in-out;
+}
+
+.slide-right {
+  animation: slide-right 0.2s ease-in-out;
+}
+
+@keyframes slide-right {
+  from {transform: translateX(2rem)};
+  to {transform: translateX(0);}
+}
+
+@keyframes slide-down {
+  from {transform: translateY(-2rem)};
+  to {transform: translateY(0);}
+}
+
+@keyframes slide-right {
+  from {transform: translateX(1rem); opacity: 0;};
+  to {transform: translateX(0); opacity: 1;}
+}

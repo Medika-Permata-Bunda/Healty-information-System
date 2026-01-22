@@ -87,6 +87,8 @@ type Patient struct {
 	District       int       `json:"district" gorm:"type:int;not null"`
 	Regencie       int       `json:"regencie" gorm:"type:int;not null"`
 	Province       int       `json:"province" gorm:"type:int;not null"`
+	IsDeleted      bool      `json:"-" gorm:"type:bool;not null"`
 	CreatedAt      time.Time `json:"-" gorm:"not null;default:now()"`
 	UpdatedAt      time.Time `json:"-" gorm:"not null;default:now()"`
+	DeletedAt      time.Time `json:"-" gorm:"not null;default:now()"`
 }

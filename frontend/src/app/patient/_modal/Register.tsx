@@ -20,7 +20,7 @@ export default function ModalRegister({onClose}: {onClose: () => void}): JSX.Ele
 
   return (
     <Modal>
-      <div ref={ref} className="w-[95%] h-[90%] bg-background border border-(--line) rounded-2xl flex overflow-y-scroll">
+      <div ref={ref} className="w-[95%] h-[90%] bg-background border border-(--line) rounded-2xl flex overflow-y-scroll slide-down">
         <div className="w-30%">
           <button onClick={() => close()}>Close</button>
         </div>

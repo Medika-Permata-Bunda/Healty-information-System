@@ -1,7 +1,16 @@
 package patientService
 
-func (s *patientService) DeletePatientService(mr string) (string, error) {
-	if err := s.repo.DeletePatient(mr); err != nil {
+import (
+	"context"
+	"errors"
+)
+
+func (s *patientService) DeletePatientService(ctx context.Context, mr string) (string, error) {
+	if err := s.repo.DeletePatient(ctx, mr); err != nil {
+		if errors.Is(err, context.DeadlineExceeded) {
+			return "request time out", err
+		}
+
 		return "failed delete data", err
 	}
 

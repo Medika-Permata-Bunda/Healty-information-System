@@ -4,6 +4,9 @@ import { ReactNode } from "react"
 interface Body {
   no: number
   name: string
+  nik: string
+  bpjs: string
+  phone_number: string
   medical_record: string
   address: string
   action?: ReactNode;
@@ -17,6 +20,9 @@ export function tableMapper(res:Patient[]): Body[] {
             no: index + 1,
             medical_record: item.medical_record,
             name: item.name,
+            nik: item.nik,
+            bpjs: item.bpjs,
+            phone_number: item.phone_number,
             address: item.address.full_address + ", " + item.address.village.name + ", " + item.address.regencie.name
         })
     })
