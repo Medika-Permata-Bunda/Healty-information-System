@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"his/pkg/response"
 	"net"
 	"net/http"
 	"strings"
@@ -78,16 +77,7 @@ func limiter(r *http.Request, rps, burst int) *rate.Limiter {
 	return lim
 }
 
-func RateLimiter(sec, burst int, next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		limiter := limiter(r, sec, burst)
-
-		if !limiter.Allow() {
-			response.ResponseMessage("Too many requests.", "The demand for resources has already reached its maximum", "WARN", 429, w, r)
-
-			return
-		}
-
-		next(w, r)
-	}
+func RateLimiter(r *http.Request, sec, burst int) bool {
+	limiter := limiter(r, sec, burst)
+	return limiter.Allow()
 }

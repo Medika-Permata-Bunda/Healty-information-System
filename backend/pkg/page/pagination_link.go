@@ -2,9 +2,10 @@ package page
 
 import (
 	"fmt"
+	"his/internal/model"
 )
 
-func PaginationLink(page, size, count int, keyword string) (string, string) {
+func paginationLink(page, size, count int, keyword string) (string, string) {
 	var previousLink string
 	var nextLink string
 
@@ -31,4 +32,18 @@ func PaginationLink(page, size, count int, keyword string) (string, string) {
 	}
 
 	return previousLink, nextLink
+}
+
+func PaginationResponse(data any, page, size, total int, keyword string) model.PaginationResponse {
+	previousLink, nextLink := paginationLink(page, size, total, keyword)
+	return model.PaginationResponse{
+		Result: data,
+		Meta: model.PaginationMeta{
+			TotalData: total,
+			Page:      page,
+			Size:      size,
+			Previous:  previousLink,
+			Next:      nextLink,
+		},
+	}
 }

@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func ParamPagination(param string, def int, r *http.Request) int {
+func paramPagination(param string, def int, r *http.Request) int {
 	var page int
 
 	p, err := checkParam(param, r)
@@ -19,7 +19,7 @@ func ParamPagination(param string, def int, r *http.Request) int {
 	return page
 }
 
-func ParamOffset(size int, r *http.Request) (int, int) {
+func paramOffset(size int, r *http.Request) (int, int) {
 	var page int
 
 	p, err := checkParam("page", r)
@@ -48,4 +48,14 @@ func checkParam(param string, r *http.Request) (int, error) {
 	}
 
 	return st, nil
+}
+
+func PaginationParamater(r *http.Request) (int, int, int, string) {
+	param := r.URL.Query()
+	keyword := param.Get("keyword")
+
+	size := paramPagination("size", 15, r)
+	page, offsite := paramOffset(size, r)
+
+	return page, size, offsite, keyword
 }

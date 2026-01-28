@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func ResponseMessage(message string, log string, ty string, code int, w http.ResponseWriter, r *http.Request) {
+func Message(message string, log string, ty string, code int, w http.ResponseWriter, r *http.Request) {
 	var s string
 
 	switch ty {

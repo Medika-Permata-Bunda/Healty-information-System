@@ -2,9 +2,10 @@ package patientHandle
 
 import (
 	"context"
+	errorhttp "his/internal/http/error"
+	"his/internal/http/helper"
 	patientService "his/internal/service/patient"
 	"his/pkg/response"
-	"his/pkg/util"
 	"net/http"
 	"time"
 
@@ -15,26 +16,16 @@ func HandlePrefix(db *gorm.DB, serv patientService.PatientService) http.HandlerF
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodDelete:
-			delete(w, r, serv)
+			helper.Delete("/patient/", w, r, func(s string) {
+				ctx, cancel := context.WithTimeout(r.Context(), time.Second*5)
+				defer cancel()
+
+				if err := serv.Delete(ctx, s); err != nil {
+					message, typeErr, code := errorhttp.Map(err)
+					response.Message(message, err.Error(), typeErr, code, w, r)
+					return
+				}
+			})
 		}
 	}
-}
-
-func delete(w http.ResponseWriter, r *http.Request, serv patientService.PatientService) {
-	param, err := util.ParamStr(r, "/patient/")
-	if err != nil {
-		response.ResponseMessage("invalid parameter", err.Error(), "ERROR", http.StatusBadRequest, w, r)
-		return
-	}
-
-	ctx, cancel := context.WithTimeout(r.Context(), time.Second*5)
-	defer cancel()
-
-	message, err := serv.DeletePatientService(ctx, param)
-	if err != nil {
-		response.ResponseMessage(message, err.Error(), "ERROR", http.StatusBadRequest, w, r)
-		return
-	}
-
-	response.ResponseMessage(message, message, "INFO", http.StatusOK, w, r)
 }

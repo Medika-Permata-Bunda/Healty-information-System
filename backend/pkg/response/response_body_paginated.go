@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func ResponseBodyPaginated(response any, meta any, log string, ty string, w http.ResponseWriter, r *http.Request) {
+func JSONPaginated(response any, meta any, log string, ty string, w http.ResponseWriter, r *http.Request) {
 	var s bool
 
 	switch ty {
