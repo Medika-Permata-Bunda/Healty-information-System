@@ -11,9 +11,9 @@ type patientService struct {
 }
 
 type PatientService interface {
-	CreatePatientService(ctx context.Context, patient *patientModel.Patient) (patientModel.Patient, string, error)
-	GetAllPatientService(ctx context.Context, page, size int, keyword string) ([]patientModel.Patient, int, string, error)
-	DeletePatientService(ctx context.Context, mr string) (string, error)
+	Create(ctx context.Context, patient *patientModel.Patient) (patientModel.Patient, error)
+	GetPaginated(ctx context.Context, page, size int, keyword string) ([]patientModel.Patient, int, error)
+	Delete(ctx context.Context, mr string) error
 }
 
 func InitPatientService(repo patientRepo.PatientRepository) PatientService {

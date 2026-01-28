@@ -2,13 +2,12 @@ package patientHandle
 
 import (
 	"context"
+	errorhttp "his/internal/http/error"
+	"his/internal/http/helper"
 	"his/internal/mapper"
-	"his/internal/model"
 	patientModel "his/internal/model/patient"
 	patientService "his/internal/service/patient"
-	pages "his/pkg/page"
 	"his/pkg/response"
-	"his/pkg/util"
 	"net/http"
 	"time"
 
@@ -19,61 +18,33 @@ func Handle(db *gorm.DB, serv patientService.PatientService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
-			getAll(w, r, serv)
+			helper.Paginated(w, r, func(page, size, offsite int, keyword string) (any, int, error) {
+				ctx, cancel := context.WithTimeout(r.Context(), time.Second*5)
+				defer cancel()
+
+				result, total, err := serv.GetPaginated(ctx, offsite, size, keyword)
+				if err != nil {
+					message, typeErr, code := errorhttp.Map(err)
+					response.Message(message, err.Error(), typeErr, code, w, r)
+					return nil, 0, err
+				}
+
+				return mapper.MappingPatientData(result), total, nil
+			})
 		case http.MethodPost:
-			create(w, r, serv)
+			helper.Post(w, r, func(t patientModel.Patient) (patientModel.PatientShow, string, error) {
+				ctx, cancel := context.WithTimeout(r.Context(), time.Second*5)
+				defer cancel()
+
+				result, err := serv.Create(ctx, &t)
+				if err != nil {
+					message, typeErr, code := errorhttp.Map(err)
+					response.Message(message, err.Error(), typeErr, code, w, r)
+					return patientModel.PatientShow{}, "", err
+				}
+
+				return mapper.MappingPatientSingleData(result), "success", nil
+			})
 		}
 	}
-}
-
-func create(w http.ResponseWriter, r *http.Request, serv patientService.PatientService) {
-	requestBody, err := util.BodyDecoder[patientModel.Patient](r)
-	if err != nil {
-		response.ResponseMessage("failed decode body", err.Error(), "ERROR", http.StatusBadRequest, w, r)
-		return
-	}
-
-	ctx, cancel := context.WithTimeout(r.Context(), time.Second*5)
-	defer cancel()
-
-	result, message, err := serv.CreatePatientService(ctx, &requestBody)
-	if err != nil {
-		response.ResponseMessage(message, err.Error(), "ERROR", http.StatusBadRequest, w, r)
-		return
-	}
-
-	m := mapper.MappingPatientSingleData(result)
-	response.ResponseBody(m, message, "INFO", http.StatusCreated, w, r)
-}
-
-func getAll(w http.ResponseWriter, r *http.Request, serv patientService.PatientService) {
-	param := r.URL.Query()
-	keyword := param.Get("keyword")
-
-	size := pages.ParamPagination("size", 15, r)
-	page, offsite := pages.ParamOffset(size, r)
-
-	ctx, cancel := context.WithTimeout(r.Context(), time.Second*5)
-	defer cancel()
-
-	result, total, message, err := serv.GetAllPatientService(ctx, offsite, size, keyword)
-	if err != nil {
-		response.ResponseMessage(message, err.Error(), "ERROR", 400, w, r)
-		return
-	}
-
-	previousLink, nextLink := pages.PaginationLink(page, size, total, keyword)
-	data := mapper.MappingPatientData(result)
-	res := model.PaginationResponse{
-		Result: data,
-		Meta: model.PaginationMeta{
-			TotalData: total,
-			Page:      page,
-			Size:      size,
-			Previous:  previousLink,
-			Next:      nextLink,
-		},
-	}
-
-	response.ResponseBodyPaginated(res.Result, res.Meta, "success", "INFO", w, r)
 }

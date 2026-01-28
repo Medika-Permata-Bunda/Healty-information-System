@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func ResponseBody(response any, log string, ty string, code int, w http.ResponseWriter, r *http.Request) {
+func JSON(response any, log string, ty string, code int, w http.ResponseWriter, r *http.Request) {
 	var s string
 
 	switch ty {
